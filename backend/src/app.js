@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.status(200).json(ApiResponse.success({}, "Hello world"));
 });
 
-app.get("/:id", redirectToUrl);
+app.get("/:slug", redirectToUrl);
 app.use("/api/v1/url", shortUrlRouter);
 
 // default error handler
