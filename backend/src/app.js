@@ -20,6 +20,7 @@ app.use(morgan("dev")); // request logger
 
 import shortUrlRouter from "./routes/shortURL.routes.js";
 import { redirectToUrl } from "./controllers/shortURL.controller.js";
+import authRouter from "./routes/auth.routes.js";
 
 app.get("/", (req, res) => {
   res.status(200).json(ApiResponse.success({}, "Hello world"));
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 
 app.get("/:slug", redirectToUrl);
 app.use("/api/v1/url", shortUrlRouter);
+app.use("/api/v1/auth", authRouter);
 
 // default error handler
 app.use(errorHandler);
