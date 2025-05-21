@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createShortURL } from "../api/url.api";
+import { createShortURL } from "../../../api/url.api";
 import toast from "react-hot-toast";
 
 function CreateShortURLForm() {
