@@ -1,4 +1,6 @@
 import { useState } from "react";
+import useRegister from "../hooks/useRegister";
+import toast from "react-hot-toast";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -8,6 +10,8 @@ function RegisterForm() {
     password: "",
   });
 
+  const registerMutation = useRegister();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -15,6 +19,19 @@ function RegisterForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    const loaderId = toast.loading("Creating Account");
+    registerMutation.mutate(formData, {
+      onSuccess: function (data) {
+        toast.success(data?.message || "Register success!");
+        // TODO : state update and navigate
+      },
+      onError: function (err) {
+        toast.error(err.response?.data?.message || "Creation Failed!");
+      },
+      onSettled: function () {
+        toast.dismiss(loaderId);
+      },
+    });
   };
 
   return (

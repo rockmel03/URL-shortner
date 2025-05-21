@@ -1,8 +1,8 @@
 import axiosInstance from "../config/axiosInstance";
 
-const register = async (data) => {
+export const register = async (data) => {
   try {
-    const response = await axiosInstance.post("/auth/register", data);
+    const response = await axiosInstance.post("/api/v1/auth/register", data);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -10,9 +10,9 @@ const register = async (data) => {
   }
 };
 
-const login = async (data) => {
+export const login = async (data) => {
   try {
-    const response = await axiosInstance.post("/auth/login", data);
+    const response = await axiosInstance.post("/api/v1/auth/login", data);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -20,9 +20,12 @@ const login = async (data) => {
   }
 };
 
-const refreshTokens = async (data) => {
+export const refreshTokens = async (data) => {
   try {
-    const response = await axiosInstance.post("/auth/refresh-tokens", data);
+    const response = await axiosInstance.post(
+      "/api/v1/auth/refresh-tokens",
+      data
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -30,14 +33,12 @@ const refreshTokens = async (data) => {
   }
 };
 
-const logout = async (data) => {
+export const logout = async (data) => {
   try {
-    const response = await axiosInstance.post("/auth/logout", data);
+    const response = await axiosInstance.post("/api/v1/auth/logout", data);
     return response.data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-
-export default { register, login, refreshTokens, logout };

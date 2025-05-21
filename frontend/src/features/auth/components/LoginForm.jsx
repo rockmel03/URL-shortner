@@ -1,10 +1,14 @@
 import { useState } from "react";
+import useLogin from "../hooks/useLogin";
+import toast from "react-hot-toast";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  const loginMutation = useLogin();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,6 +17,19 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    const loaderId = toast.loading("Loading...");
+    loginMutation.mutate(formData, {
+      onSuccess: function (data) {
+        toast.success(data.message || "Login Success!");
+        // TODO : state update and navigate
+      },
+      onError: function (err) {
+        toast.error(err.response?.data?.message || "Login failed!");
+      },
+      onSettled: function () {
+        toast.dismiss(loaderId);
+      },
+    });
   };
 
   return (
