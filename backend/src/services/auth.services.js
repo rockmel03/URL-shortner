@@ -17,14 +17,26 @@ const generateTokens = (user) => {
 };
 
 const registerUser = async (userData) => {
-  const { name, email, password, username } = userData;
-  const user = await userModel.create({ name, email, password, username });
-  const { accessToken, refreshToken } = generateTokens(user);
+  try {
+    const { name, email, password, username } = userData;
+    const user = await userModel.create({ name, email, password, username });
+    const { accessToken, refreshToken } = generateTokens(user);
 
-  const userObject = user.toObject();
-  delete userObject.password;
+    const userObject = user.toObject();
+    delete userObject.password;
 
-  return { user: userObject, accessToken, refreshToken };
+    return { user: userObject, accessToken, refreshToken };
+  } catch (error) {
+    if (error.code === 11000) {
+      // Check which field caused the duplicate error
+      const field = Object.keys(error.keyPattern)[0];
+      throw new ApiError(
+        409,
+        `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
+      );
+    }
+    throw error;
+  }
 };
 
 const loginUser = async (credentials) => {
