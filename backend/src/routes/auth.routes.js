@@ -20,7 +20,8 @@ router.post(
 router.post(
   "/login",
   [
-    body("email").isEmail(),
+    body("email").optional().isEmail(),
+    body("username").optional().isLength({ min: 3, max: 50 }),
     body("password").isLength({ min: 8, max: 128 }),
     validateRequest,
   ],
@@ -29,8 +30,8 @@ router.post(
 
 router.post(
   "/refresh-token",
-  [body("refreshToken").isLength({ min: 1 }), validateRequest],
-  authController.refreshToken
+  [body("refreshToken").optional().isJWT(), validateRequest],
+  authController.refreshTokens
 );
 
 router.post("/logout", validateRequest, authController.logout);

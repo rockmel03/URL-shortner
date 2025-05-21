@@ -1,81 +1,66 @@
-import jwt from "jsonwebtoken";
 import ApiResponse from "../utils/ApiResponse.js";
-import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import userModel from "../models/user.model.js";
 import { cookieOptions } from "../config/cookieOptions.js";
-
-const generateTokensAndCookie = (user) => {
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
-
-  return { accessToken, refreshToken };
-};
+import authService from "../services/auth.services.js";
 
 const register = asyncHandler(async (req, res, next) => {
-  validateRequest(req);
-
-  const { name, email, password, username } = req.body;
-  const user = await userModel.create({ name, email, password, username });
-  const { accessToken, refreshToken } = generateTokensAndCookie(user, res);
+  const { user, accessToken, refreshToken } = await authService.registerUser(
+    req.body
+  );
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
-  res
-    .status(201)
-    .send(
-      new ApiResponse(201, "User created successfully", { accessToken, user })
-    );
+  res.status(201).json(
+    ApiResponse.success(
+      {
+        accessToken,
+        refreshToken,
+        user,
+      },
+      "User created successfully",
+      201
+    )
+  );
 });
 
 const login = asyncHandler(async (req, res, next) => {
-  validateRequest(req);
-
-  const { email, password, username } = req.body;
-  const user = await userModel.findOne({ $or: [{ email }, { username }] });
-  if (!user) {
-    throw new ApiError(401, "Invalid email or password");
-  }
-
-  const isValidPassword = await user.comparePassword(password);
-  if (!isValidPassword) {
-    throw new ApiError(401, "Invalid email or password");
-  }
-
-  const { accessToken, refreshToken } = generateTokensAndCookie(user, res);
+  const { user, accessToken, refreshToken } = await authService.loginUser(
+    req.body
+  );
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
-  res
-    .status(200)
-    .send(
-      new ApiResponse(200, "Logged in successfully", { accessToken, user })
-    );
+  res.status(200).json(
+    ApiResponse.success(
+      {
+        accessToken,
+        refreshToken,
+        user,
+      },
+      "Logged in successfully"
+    )
+  );
 });
 
-const refreshToken = asyncHandler(async (req, res, next) => {
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) {
-    throw new ApiError(401, "Unauthorized");
-  }
+const refreshTokens = asyncHandler(async (req, res, next) => {
+  const token = req.cookies?.refreshToken || req.body?.refreshToken;
+  const { accessToken, refreshToken } = await authService.refreshUserToken(
+    token
+  );
 
-  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-  const user = await userModel.findById(decoded._id);
-  if (!user) {
-    throw new ApiError(401, "Unauthorized");
-  }
-
-  const accessToken = user.generateAccessToken();
-
-  //   res.cookie("refreshToken", refreshToken, cookieOptions);
-  res.status(200).send(
-    new ApiResponse(200, "Access token generated successfully", {
-      accessToken,
-    })
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.status(200).json(
+    ApiResponse.success(
+      {
+        accessToken,
+        refreshToken,
+      },
+      "Access token generated successfully"
+    )
   );
 });
 
 const logout = asyncHandler(async (req, res, next) => {
   res.clearCookie("refreshToken");
-  res.status(200).send(new ApiResponse(200, "Logged out successfully"));
+  res.status(200).json(ApiResponse.success({}, "Logged out successfully"));
 });
 
-export { register, login, refreshToken, logout };
+export default { register, login, refreshTokens, logout };

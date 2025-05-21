@@ -3,6 +3,7 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import ApiResponse from "./utils/ApiResponse.js";
 import errorHandler from "./utils/errorHandler.js";
@@ -13,6 +14,7 @@ const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(cors(corsOptions)); // cors setup
+app.use(cookieParser()); // cookie parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public"))); // serves static file
