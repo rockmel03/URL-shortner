@@ -23,7 +23,7 @@ export const login = async (data) => {
 export const refreshTokens = async (data) => {
   try {
     const response = await axiosInstance.post(
-      "/api/v1/auth/refresh-tokens",
+      "/api/v1/auth/refresh-token",
       data
     );
     return response.data;
