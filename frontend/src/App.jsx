@@ -1,16 +1,12 @@
 import React from "react";
-import Home from "./pages/Home";
 import { Toaster } from "react-hot-toast";
-import Login from "./pages/auth/login";
-import Register from "./pages/auth/register";
+import { Outlet } from "@tanstack/react-router";
 
 function App() {
   return (
     <>
-      {/* <Home /> */}
-      <Login />
-      <Register />
       <Toaster />
+      <Outlet />
     </>
   );
 }
