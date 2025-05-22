@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
 import useLogin from "../hooks/useLogin";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { login } from "../authSlice";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -9,6 +12,8 @@ function LoginForm() {
   });
 
   const loginMutation = useLogin();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,7 +26,9 @@ function LoginForm() {
     loginMutation.mutate(formData, {
       onSuccess: function (data) {
         toast.success(data.message || "Login Success!");
-        // TODO : state update and navigate
+        dispatch(login({ token: data.data.accessToken, user: data.data.user }));
+        localStorage.setItem("isLoggedIn", JSON.stringify(true));
+        router.navigate({ to: "/" });
       },
       onError: function (err) {
         toast.error(err.response?.data?.message || "Login failed!");
@@ -61,9 +68,9 @@ function LoginForm() {
       </form>
       <p className="text-sm mt-2 text-gray-500">
         Don't have an account?{" "}
-        <a href="/register" className="text-blue-500 hover:underline">
+        <Link to="/auth/register" className="text-blue-500 hover:underline">
           Create here
-        </a>
+        </Link>
       </p>
     </div>
   );

@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
 import { createShortURL } from "../../../api/url.api";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 function CreateShortURLForm() {
-  const [longUrl, setLongUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState("");
+  const [formData, setFormData] = useState({
+    longUrl: "",
+    customSlug: "",
+  });
 
+  const [shortUrl, setShortUrl] = useState("");
   const [error, setError] = useState("");
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleCopyToClipboard = async () => {
     await window.navigator.clipboard.writeText(shortUrl);
     toast.success("URL copied to clipboard!");
@@ -15,12 +27,13 @@ function CreateShortURLForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // validation
+    const { longUrl, customSlug } = formData;
     if (!longUrl) return setError("URL field is required");
     if (!/^https?:\/\//i.test(longUrl)) {
       return setError("Must start with http:// or https://");
     }
 
-    createShortURL({ url: longUrl })
+    createShortURL({ url: longUrl, customSlug })
       .then((res) => {
         if (res.data?.shortUrl) {
           setShortUrl(res.data?.shortUrl);
@@ -35,24 +48,22 @@ function CreateShortURLForm() {
   useEffect(() => {
     setError("");
     setShortUrl("");
-  }, [longUrl]);
+  }, [formData]);
+
   return (
     <div className="rounded-lg shadow-lg w-sm p-10 bg-white text-black">
-      <form className="flex flex-col" onSubmit={handleSubmit}>
-        <label className="mb-2 font-medium" htmlFor="longUrl">
+      <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+        <label className="font-medium" htmlFor="longUrl">
           Enter your long URL:
         </label>
-        {error && (
-          <p className="text-sm mb-2 font-semibold text-red-500">{error}</p>
-        )}
         <input
-          className="mb-4 p-2 border border-gray-300 rounded"
+          className="p-2 border border-gray-300 rounded"
           type="text"
           id="longUrl"
           name="longUrl"
           placeholder="https://example.com/"
-          value={longUrl}
-          onChange={(e) => setLongUrl(e.target.value)}
+          value={formData.longUrl}
+          onChange={handleChange}
         />
         <button
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
@@ -60,7 +71,29 @@ function CreateShortURLForm() {
         >
           Shorten URL
         </button>
+        {error && (
+          <p className="text-sm font-semibold text-red-400 px-2 py-1 rounded bg-red-100">
+            {error}
+          </p>
+        )}
+        {isAuthenticated && (
+          <>
+            <label className="font-medium" htmlFor="customSlug">
+              Enter custom slug (optional):
+            </label>
+            <input
+              className=" p-2 border border-gray-300 rounded"
+              type="text"
+              id="customSlug"
+              name="customSlug"
+              placeholder="custom"
+              value={formData.customSlug}
+              onChange={handleChange}
+            />
+          </>
+        )}
       </form>
+
       {shortUrl && (
         <>
           <br />

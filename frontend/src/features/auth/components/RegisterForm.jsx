@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
 import useRegister from "../hooks/useRegister";
 import toast from "react-hot-toast";
+import { login } from "../authSlice";
+import { useDispatch } from "react-redux";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -11,6 +14,8 @@ function RegisterForm() {
   });
 
   const registerMutation = useRegister();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +28,9 @@ function RegisterForm() {
     registerMutation.mutate(formData, {
       onSuccess: function (data) {
         toast.success(data?.message || "Register success!");
-        // TODO : state update and navigate
+        dispatch(login({ token: data.data.accessToken, user: data.data.user }));
+        localStorage.setItem("isLoggedIn", JSON.stringify(true));
+        router.navigate({ to: "/" });
       },
       onError: function (err) {
         toast.error(err.response?.data?.message || "Creation Failed!");
@@ -80,9 +87,9 @@ function RegisterForm() {
       </form>
       <p className="text-sm mt-2 text-gray-500">
         Already have an account?{" "}
-        <a href="/login" className="text-blue-500 hover:underline">
+        <Link to="/auth/login" className="text-blue-500 hover:underline">
           Login here
-        </a>
+        </Link>
       </p>
     </div>
   );
