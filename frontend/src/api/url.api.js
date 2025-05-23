@@ -9,3 +9,13 @@ export const createShortURL = async (data) => {
     throw error;
   }
 };
+
+export const getAllUrls = async (data) => {
+  try {
+    const response = await axiosInstance.get("api/v1/url/", data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

@@ -73,3 +73,38 @@ export const getRedirectUrl = async (slug) => {
 
   return shortUrlData.originalUrl;
 };
+
+/**
+ *
+ * @param {{limit:Number,page:Number}} PaginationData - default limit and page are 10 and 1 respectively
+ * @param {MongoID} userId
+ * @returns `data` object
+ */
+export const getAllUrls = async ({ limit = 10, page = 1 } = {}, userId) => {
+  const currentLimit = Number(limit);
+  const currentPage = Number(page);
+  const skip = currentLimit * (currentPage - 1);
+
+  const urls = await ShortURL.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(currentLimit)
+    .lean(); // to make it plain js object;
+
+  const updatedUrls = urls.map((url) => {
+    const shortUrlWithDomain = `${process.env.SERVER_DOMAIN}/${url.shortUrl}`;
+    const normalizeShortURL = normalizeUrl(shortUrlWithDomain);
+
+    return { ...url, shortUrl: normalizeShortURL };
+  });
+
+  const totalDocuments = await ShortURL.countDocuments({ userId });
+
+  return {
+    urls: updatedUrls,
+    totalPages: Math.ceil(totalDocuments / currentLimit),
+    totalDocuments,
+    currentLimit,
+    currentPage,
+  };
+};
