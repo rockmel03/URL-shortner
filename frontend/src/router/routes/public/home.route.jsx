@@ -1,11 +1,11 @@
 import { createRoute } from "@tanstack/react-router";
-import Home from "../../pages/Home";
-import rootRoute from "./__root.route";
+import Home from "../../../pages/Home";
+import publicLayoutRoute from "./layout.route";
 
 export const homeRoute = createRoute({
   path: "/",
   component: Home,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => publicLayoutRoute,
 });
 
 export default homeRoute;
