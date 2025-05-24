@@ -1,6 +1,7 @@
 import { Toaster } from "react-hot-toast";
 import { Outlet } from "@tanstack/react-router";
 import useInitAuth from "./features/auth/hooks/useInitAuth";
+import Header from "./components/Header";
 
 function App() {
   const { isLoading } = useInitAuth();
@@ -10,6 +11,7 @@ function App() {
   return (
     <>
       <Toaster />
+      <Header />
       <Outlet />
     </>
   );
