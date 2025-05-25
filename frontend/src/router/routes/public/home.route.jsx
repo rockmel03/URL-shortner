@@ -8,4 +8,10 @@ export const homeRoute = createRoute({
   getParentRoute: () => publicLayoutRoute,
 });
 
+export const homeAliasRoute = createRoute({
+  path: "/home",
+  component: Home,
+  getParentRoute: () => publicLayoutRoute,
+});
+
 export default homeRoute;

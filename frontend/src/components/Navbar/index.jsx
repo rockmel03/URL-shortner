@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import LogoutButton from "../../features/auth/components/LogoutButton";
+import { Dropdown } from "../Dropdown";
 
 const navLinks = {
   home: "/home",
@@ -33,7 +34,9 @@ const Navbar = () => {
             <>
               <button
                 onClick={() => setUserDropdown((prev) => !prev)}
-                className="w-8 aspect-square rounded-full overflow-hidden focus:ring-4"
+                className={`w-8 aspect-square rounded-full overflow-hidden ${
+                  userDropdown ? "ring-4" : ""
+                }`}
               >
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
@@ -43,10 +46,10 @@ const Navbar = () => {
 
               {/* <!---dropdown---> */}
 
-              <div
-                className={`absolute -translate-x-10/12 translate-y-8/12 z-50 my-4  rounded-lg shadow-sm bg-gray-700 ${
-                  userDropdown ? "" : "hidden"
-                }`}
+              <Dropdown
+                showDropdown={userDropdown}
+                setShowDropdown={setUserDropdown}
+                className={`absolute -translate-x-10/12 translate-y-8/12 z-50 my-4  rounded-lg shadow-sm bg-gray-700`}
                 id="user-dropdown"
               >
                 <div className="px-4 py-3">
@@ -78,7 +81,7 @@ const Navbar = () => {
                     </LogoutButton>
                   </li>
                 </ul>
-              </div>
+              </Dropdown>
             </>
           ) : (
             <Link

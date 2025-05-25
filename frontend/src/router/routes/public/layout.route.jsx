@@ -1,7 +1,7 @@
 import { createRoute } from "@tanstack/react-router";
 import PublicLayout from "../../../Layouts/PublicLayout";
 import rootRoute from "../__root.route";
-import homeRoute from "./home.route";
+import homeRoute, { homeAliasRoute } from "./home.route";
 
 const publicLayoutRoute = createRoute({
   id: "public",
@@ -9,6 +9,6 @@ const publicLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
 });
 
-publicLayoutRoute.addChildren([homeRoute]);
+publicLayoutRoute.addChildren([homeRoute, homeAliasRoute]);
 
 export default publicLayoutRoute;
