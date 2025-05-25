@@ -2,7 +2,7 @@ import UrlList from "../../features/url/components/UrlList";
 
 const Urls = () => {
   return (
-    <div>
+    <div className="w-full h-full">
       <UrlList />
     </div>
   );

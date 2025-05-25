@@ -23,8 +23,8 @@ const Navbar = () => {
   const [navDropdown, setNavDropdown] = useState(false);
 
   return (
-    <nav className="bg-blue-950 text-white px-2 py-4">
-      <div className="max-w-screen-xl mx-auto flex gap-1 items-center justify-between flex-wrap">
+    <nav className="w-full h-full bg-blue-950 text-white px-2 py-4">
+      <div className="w-full h-full max-w-screen-xl mx-auto flex gap-1 items-center justify-between flex-wrap">
         <h2 className="text-xl">
           <span className="font-semibold">URL</span> <span>shortner</span>
         </h2>
