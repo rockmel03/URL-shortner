@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import useRefreshToken from "./useRefreshToken";
 import { useDispatch } from "react-redux";
-import { setToken } from "../authSlice";
+import { setToken, setLoading } from "../authSlice";
 import toast from "react-hot-toast";
 
 const useInitAuth = () => {
@@ -29,6 +29,7 @@ const useInitAuth = () => {
         setError(message);
       } finally {
         setIsLoading(false);
+        dispatch(setLoading(false));
       }
     };
 
@@ -37,6 +38,7 @@ const useInitAuth = () => {
       checkAuth();
     } else {
       setIsLoading(false);
+      dispatch(setLoading(false));
     }
   }, []);
 

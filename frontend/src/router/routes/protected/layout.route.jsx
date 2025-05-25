@@ -9,11 +9,15 @@ const protectedRoute = createRoute({
   getParentRoute: () => rootRoute,
   component: PublicLayout,
   beforeLoad: () => {
-    const isAuthenticated = store.getState().auth?.isAuthenticated;
-    if (!isAuthenticated) {
+    const auth = store.getState().auth;
+    // If auth is still being initialized, don't redirect
+    if (auth?.isLoading) {
+      return;
+    }
+    // Only redirect if we're sure user is not authenticated
+    if (!auth?.isAuthenticated) {
       return redirect({
         to: "/auth/login",
-        replace: true,
       });
     }
   },
