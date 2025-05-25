@@ -49,21 +49,21 @@ const Navbar = () => {
                 }`}
                 id="user-dropdown"
               >
-                <div class="px-4 py-3">
-                  <span class="block capitalize text-sm text-gray-900 dark:text-white">
+                <div className="px-4 py-3">
+                  <span className="block capitalize text-sm text-gray-900 dark:text-white">
                     {user?.name}
                   </span>
-                  <span class="block text-sm text-gray-500 truncate dark:text-gray-400">
+                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
                     {user?.email}
                   </span>
                 </div>
-                <ul class="py-2" aria-labelledby="user-menu-button">
+                <ul className="py-2" aria-labelledby="user-menu-button">
                   {Object.entries(userDropDownLinks).map(([key, value]) => {
                     return (
                       <li key={key}>
                         <Link
                           to={value}
-                          class="block px-4 py-2 text-sm hover:bg-gray-600"
+                          className="block px-4 py-2 text-sm hover:bg-gray-600"
                         >
                           <span className="capitalize">{key}</span>
                         </Link>
@@ -72,7 +72,7 @@ const Navbar = () => {
                   })}
                   <li>
                     <LogoutButton className="w-full text-start">
-                      <div class="block px-4 py-2 text-sm hover:bg-gray-600">
+                      <div className="block px-4 py-2 text-sm hover:bg-gray-600">
                         <span>Sign out</span>
                       </div>
                     </LogoutButton>
@@ -92,11 +92,11 @@ const Navbar = () => {
           <button
             onClick={() => setNavDropdown((prev) => !prev)}
             type="button"
-            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
           >
-            <span class="sr-only">Open main menu</span>
+            <span className="sr-only">Open main menu</span>
             <svg
-              class="w-5 h-5"
+              className="w-5 h-5"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -104,9 +104,9 @@ const Navbar = () => {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M1 1h15M1 7h15M1 13h15"
               />
             </svg>
